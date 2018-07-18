@@ -16,8 +16,7 @@ else:
 def toggle_pin(
     target = argv[1],
     left_margin = int(argv[2]), # 10
-    full_height = int(argv[3]), # 1040
-    desired_width = int(argv[4]) # 450
+    desired_width = int(argv[3]) # 450
 ):
     i3 = i3ipc.Connection()
     current_workspace = i3.get_tree().find_focused().workspace()
@@ -45,7 +44,7 @@ def toggle_pin(
     if not target.is_running:
         target.start()
 
-    pin(target, current_workspace, left_margin, full_height, desired_width)
+    pin(target, current_workspace, left_margin, desired_width)
 
 
 class pinnable_window:
@@ -101,17 +100,15 @@ class pinnable_window:
         return windows[0] if windows else False
 
 
-def pin(pinnable, workspace, left_margin, full_height, desired_width):
+def pin(pinnable, workspace, left_margin, desired_width):
     pinnable.window.command("move container to workspace " + workspace.name + ", floating disable")
-    pinnable.relocate()
 
     # move window to left side
-    for i in range(10):
-        if ((pinnable.window.rect.x <= left_margin) and (pinnable.window.rect.height >= full_height)):
-            break
 
-        pinnable.window.command("move left")
-        pinnable.relocate()
+    pinnable.window.command("move position 6 27")
+    pinnable.relocate()
+    pinnable.window.command("move left")
+    pinnable.relocate()
 
     # resize window to desired_width
     if (pinnable.window.rect.width > desired_width):
